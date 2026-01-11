@@ -3,16 +3,26 @@
  * Registers global middleware and base routes
  */
 
-const express = require("express");
+import CookieParser from "cookie-parser";
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
 
 const app = express();
 
-// Middleware to parse incoming JSON requests
 app.use(express.json());
+app.use(CookieParser());
+app.use(cors());
+app.use(helmet());
 
 // Health check route to confirm API is running
 app.get("/", (req, res) => {
   res.send("Job Internship Portal API is running");
 });
 
-module.exports = app;
+// 404 handler
+app.all("{/*path}", (req, res, next) => {
+  next(new AppError(`Route ${req.originalUrl} not found`, 404));
+});
+
+export default app;

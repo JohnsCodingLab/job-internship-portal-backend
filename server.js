@@ -3,18 +3,26 @@
  * Connects to the database and starts the Express server
  */
 
-const app = require("./app");
-const connectDB = require("./src/config/database");
+import app from "./app.js";
+import connectDB from "./config/database.js";
+import { env } from "./config/env.js";
 
-// Load environment variables
-require("./src/config/env");
+const startServer = async () => {
+  try {
+    await connectDB();
 
-const PORT = process.env.PORT || 5000;
+    const server = app.listen(env.PORT, () => {
+      console.log(`🚀 Server running on port ${env.PORT}`);
+    });
 
-// Establish database connection before starting the server
-connectDB();
+    server.on("error", (error) => {
+      console.error("❌ Server error:", error);
+      process.exit(1);
+    });
+  } catch (error) {
+    console.error("❌ Startup failed:", error);
+    process.exit(1);
+  }
+};
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+startServer();
