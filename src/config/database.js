@@ -3,21 +3,20 @@
  * This function is called once when the server starts.
  */
 
-import mongoose from "mongoose";
-import { env } from "./env.js";
+const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    const connectionInstance = await mongoose.connect(env.MONGO_URI);
+    // Connect to MongoDB using the URI from environment variables
+    await mongoose.connect(process.env.MONGO_URI);
 
-    console.log(
-      `MongoDb Connected !!! \n ${connectionInstance.connection.host}`
-    );
+    console.log("MongoDB connected successfully");
   } catch (error) {
-    console.error("MongoDb Connection Failed");
-    console.error(error);
+    console.error("MongoDB connection failed:", error.message);
+
+    // Stop the app if database connection fails
     process.exit(1);
   }
 };
 
-export default connectDB;
+module.exports = connectDB;

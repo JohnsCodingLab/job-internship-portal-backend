@@ -1,28 +1,7 @@
-import dotenv from "dotenv";
-import { z } from "zod";
+/**
+ * Loads environment variables from the .env file into process.env
+ * This allows us to keep sensitive data (like DB URIs) out of source code.
+ */
+const dotenv = require("dotenv");
 
 dotenv.config();
-
-const envSchema = z.object({
-  // Server
-  NODE_ENV: z
-    .enum(["development", "production", "test"])
-    .default("development"),
-  PORT: z.coerce.number().default(5000),
-
-  // Database
-  MONGO_URI: z.string().min(1, "DATABASE_URL is required"),
-
-  // JWT
-  JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters"),
-  JWT_REFRESH_SECRET: z
-    .string()
-    .min(32, "JWT_REFRESH_SECRET must be at least 32 characters"),
-  JWT_ACCESS_EXPIRATION: z.string().default("15m"),
-  JWT_REFRESH_EXPIRATION: z.string().default("7d"),
-});
-
-export const env = envSchema.parse(process.env);
-
-export const isDevelopment = env.NODE_ENV === "development";
-export const isProduction = env.NODE_ENV === "production";
