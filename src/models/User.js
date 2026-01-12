@@ -1,43 +1,42 @@
 /**
- * User model
- * Represents users of the Job Internship Portal application
- * This includes students, employers, and admins.
+ * User Model
+ * ==========================
+ * This schema defines how users are stored in MongoDB.
+ * It represents students, employers, and admins
+ * in the job & internship portal application.
  */
 
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    // User's full name
     fullName: {
       type: String,
       required: true,
       trim: true,
     },
 
-    // User's email address (must be unique)
     email: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
+      trim: true,
     },
 
-    // Hashed password (hashing will be handled later)
     password: {
       type: String,
       required: true,
+      minlength: 6,
     },
 
-    // Role of the user within the system
     role: {
       type: String,
-      enum: ["user", "employer", "admin"],
-      default: "user",
+      enum: ["student", "employer", "admin"],
+      default: "student",
     },
   },
   {
-    // Automatically adds createdAt and updatedAt fields
     timestamps: true,
   }
 );
