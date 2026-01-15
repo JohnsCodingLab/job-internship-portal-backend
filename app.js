@@ -1,28 +1,37 @@
-/**
- * Initializes the Express application
- * Registers global middleware and base routes
- */
-
-import CookieParser from "cookie-parser";
+// app.js: Main Express app setup
 import express from "express";
-import cors from "cors";
-import helmet from "helmet";
+import morgan from "morgan"; // HTTP request logger
+import dotenv from "dotenv";
+
+import authRoutes from "./src/routes/authRoutes.js"; // Auth routes
+import jobsRoutes from "./src/routes/jobsRoutes.js";   // Job routes
+
+// Corrected shared folder paths
+import { authRateLimiter } from "./src/shared/middleware/rateLimiter.js"; // Rate limiter
+import { errorHandler } from "./src/shared/middleware/ErrorHandler.js";  // Global error handler
+import { AppError } from "./src/shared/utils/AppError.js";                // Custom error class
+
+dotenv.config(); // Load environment variables
 
 const app = express();
 
-app.use(express.json());
-app.use(CookieParser());
-app.use(cors());
-app.use(helmet());
+// ===== Middleware =====
+app.use(express.json()); // Parse JSON bodies
+app.use(morgan("dev"));  // Log HTTP requests
 
-// Health check route to confirm API is running
-app.get("/", (req, res) => {
-  res.send("Job Internship Portal API is running");
+// ===== Routes =====
+// Auth routes (with rate limiter)
+app.use("/api/auth", authRateLimiter, authRoutes);
+
+// Job routes (protected inside jobsRoutes with authMiddleware)
+app.use("/api/jobs", jobsRoutes);
+
+// ===== 404 handler for unknown routes =====
+app.use((req, res, next) => {
+  next(AppError.notFound("Route not found"));
 });
 
-// 404 handler
-app.all("{/*path}", (req, res, next) => {
-  next(new AppError(`Route ${req.originalUrl} not found`, 404));
-});
+// ===== Global error handler =====
+app.use(errorHandler);
 
 export default app;

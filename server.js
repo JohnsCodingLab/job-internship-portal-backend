@@ -1,20 +1,19 @@
-/**
- * Entry point of the application
- * Connects to the database and starts the Express server
- */
-
+// server.js: Connect to DB and start server
 import app from "./app.js";
-import connectDB from "./config/database.js";
-import { env } from "./config/env.js";
+import connectDB from "./src/config/database.js"; // MongoDB connection
+import { env } from "./src/config/env.js";       // Environment variables
 
 const startServer = async () => {
   try {
+    // Connect to MongoDB
     await connectDB();
 
+    // Start Express server
     const server = app.listen(env.PORT, () => {
       console.log(`🚀 Server running on port ${env.PORT}`);
     });
 
+    // Handle server errors
     server.on("error", (error) => {
       console.error("❌ Server error:", error);
       process.exit(1);
