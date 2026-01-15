@@ -1,15 +1,13 @@
 /**
- * Auth Routes
- * ==========================
- * Defines HTTP routes for authentication actions.
+ * Authentication Routes
  */
 
-const express = require("express");
-const { registerUser } = require("../controllers/authController");
+import { Router } from "express";
+import { register, login } from "../controllers/authController.js";
 
-const router = express.Router();
+const router = Router();
 
-// Register user
-router.post("/register", registerUser);
+router.post("/register", register);
+router.post("/login", login);
 
-module.exports = router;
+export default router;

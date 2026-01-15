@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
@@ -22,12 +23,16 @@
   "dependencies": {
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
-    "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
+    "cookieparser": "^0.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^4.22.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.2",
+    "morgan": "^1.10.1",
     "nodemon": "^3.1.11",
     "zod": "^4.3.5"
   }

@@ -1,7 +1,6 @@
-import { AppError } from "#shared/utils/AppError.js";
+import { AppError } from "../utils/AppError.js"; // use relative path
 
 export const errorHandler = (err, _req, res, _next) => {
-  // Known (operational) error
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
       status: "error",
@@ -9,7 +8,6 @@ export const errorHandler = (err, _req, res, _next) => {
     });
   }
 
-  // Unknown error (programmer error)
   console.error("UNEXPECTED ERROR:", err);
 
   return res.status(500).json({

@@ -1,12 +1,9 @@
-/**
- * Authentication middleware
- * Protects routes by validating JWT tokens
- */
+// Authentication middleware
+// Protects routes by validating JWT token
+import jwt from "jsonwebtoken";
+import { env } from "../config/env.js"; // Environment variables (contains JWT_SECRET)
 
-const jwt = require("jsonwebtoken");
-const jwtConfig = require("../config/jwt");
-
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -16,9 +13,9 @@ module.exports = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, jwtConfig.secret);
-    req.user = decoded;
-    next();
+    const decoded = jwt.verify(token, env.JWT_SECRET); // Verify JWT
+    req.user = decoded; // Attach user info to request
+    next(); // Proceed to next middleware/controller
   } catch (error) {
     res.status(401).json({ message: "Invalid token" });
   }

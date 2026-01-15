@@ -1,19 +1,27 @@
-/**
- * Server Entry Point
- * ==========================
- * Starts the Express server and connects to MongoDB.
- */
+// server.js: Connect to DB and start server
+import app from "./app.js";
+import connectDB from "./src/config/database.js"; // MongoDB connection
+import { env } from "./src/config/env.js";       // Environment variables
 
-require("dotenv").config();
-const app = require("./app");
-const connectDB = require("./src/config/database");
+const startServer = async () => {
+  try {
+    // Connect to MongoDB
+    await connectDB();
 
-const PORT = process.env.PORT || 5000;
+    // Start Express server
+    const server = app.listen(env.PORT, () => {
+      console.log(`🚀 Server running on port ${env.PORT}`);
+    });
 
-// Connect to database
-connectDB();
+    // Handle server errors
+    server.on("error", (error) => {
+      console.error("❌ Server error:", error);
+      process.exit(1);
+    });
+  } catch (error) {
+    console.error("❌ Startup failed:", error);
+    process.exit(1);
+  }
+};
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+startServer();
